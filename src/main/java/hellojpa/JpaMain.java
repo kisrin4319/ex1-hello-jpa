@@ -15,21 +15,21 @@ public class JpaMain {
 
         try {
 
-            //비영속
+            Team team = new Team();
+            team.setName("TeamA");
+            em.persist(team);
+
             Member member = new Member();
-            member.setId(101L);
-            member.setUsername("HelloJPA");
+            member.setUsername("member1");
+            member.setTeamId(team.getId());
 
-            //영속
-            System.out.println("=========== BEFORE ==========");
             em.persist(member);
-            System.out.println("=========== AFTER ==========");
 
 
-            Member findMember = em.find(Member.class, 101L);
+            Member findMember = em.find(Member.class,member.getId());
 
-            System.out.println("findMember.id = " + findMember.getId());
-            System.out.println("findMember.name = " + findMember.getUsername());
+            Long findTeamId = findMember.getTeamId();
+            Team findTeam = em.find(Team.class, findTeamId);
 
             tx.commit();
         } catch (Exception e){
@@ -37,7 +37,6 @@ public class JpaMain {
         } finally {
             em.close();
         }
-
         emf.close();
     }
 }
